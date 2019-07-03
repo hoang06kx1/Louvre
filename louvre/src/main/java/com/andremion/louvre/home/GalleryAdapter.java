@@ -29,7 +29,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckedTextView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -175,8 +174,8 @@ class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHolder> {
 
         if (VIEW_TYPE_MEDIA == getItemViewType(position)) {
             MediaViewHolder viewHolder = (MediaViewHolder) holder;
-            ViewCompat.setTransitionName(viewHolder.mCheckView, checkboxTransitionName);
-            viewHolder.mCheckView.setChecked(selected);
+            ViewCompat.setTransitionName(viewHolder.mTvOrdinalNumber, checkboxTransitionName);
+            viewHolder.mTvOrdinalNumber.setText(selected ? "+" : "-");
             holder.mImageView.setContentDescription(getLabel(position));
         } else {
             BucketViewHolder viewHolder = (BucketViewHolder) holder;
@@ -197,7 +196,7 @@ class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHolder> {
                 if (SELECTION_PAYLOAD.equals(payload)) {
                     if (VIEW_TYPE_MEDIA == getItemViewType(position)) {
                         MediaViewHolder viewHolder = (MediaViewHolder) holder;
-                        viewHolder.mCheckView.setChecked(selected);
+                        viewHolder.mTvOrdinalNumber.setText(selected? "+": "-");
                         if (selected) {
                             AnimationHelper.scaleView(holder.mImageView, SELECTED_SCALE);
                         } else {
@@ -329,12 +328,12 @@ class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHolder> {
 
     class MediaViewHolder extends ViewHolder implements View.OnClickListener {
 
-        final CheckedTextView mCheckView;
+        final TextView mTvOrdinalNumber;
 
         private MediaViewHolder(View itemView) {
             super(itemView);
-            mCheckView = itemView.findViewById(R.id.check);
-            mCheckView.setOnClickListener(this);
+            mTvOrdinalNumber = itemView.findViewById(R.id.tv_ordinal_number);
+            mTvOrdinalNumber.setOnClickListener(this);
             itemView.setOnClickListener(this);
         }
 
@@ -348,7 +347,7 @@ class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHolder> {
                 return;
             }
 
-            if (v == mCheckView) {
+            if (v == mTvOrdinalNumber) {
                 boolean selectionChanged = handleChangeSelection(position);
                 if (selectionChanged) {
                     notifyItemChanged(position, SELECTION_PAYLOAD);
@@ -362,7 +361,7 @@ class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHolder> {
                 }
             } else {
                 if (mCallbacks != null) {
-                    mCallbacks.onMediaClick(mImageView, mCheckView, getBucketId(position), position);
+                    mCallbacks.onMediaClick(mImageView, mTvOrdinalNumber, getBucketId(position), position);
                 }
             }
         }

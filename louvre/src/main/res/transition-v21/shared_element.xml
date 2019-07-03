@@ -18,7 +18,7 @@
     <transitionSet>
         <targets>
             <target android:targetId="@id/image" />
-            <target android:targetId="@id/check" />
+            <target android:targetId="@id/tv_ordinal_number" />
         </targets>
         <changeBounds>
             <arcMotion android:maximumAngle="50" />

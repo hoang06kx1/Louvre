@@ -39,6 +39,7 @@ import android.transition.TransitionInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckedTextView;
+import android.widget.TextView;
 
 import com.andremion.louvre.R;
 import com.andremion.louvre.data.MediaLoader;
@@ -118,7 +119,7 @@ public class PreviewActivity extends AppCompatActivity implements MediaLoader.Ca
     private MediaLoader mMediaLoader;
     private PreviewAdapter mAdapter;
     private ViewPager mViewPager;
-    private CheckedTextView mCheckbox;
+    private TextView mTvOrdinalNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,15 +145,15 @@ public class PreviewActivity extends AppCompatActivity implements MediaLoader.Ca
         assert selection != null;
         int maxSelection = getIntent().getExtras().getInt(EXTRA_MAX_SELECTION);
 
-        mCheckbox = (CheckedTextView) findViewById(R.id.check);
-        mCheckbox.setOnClickListener(new View.OnClickListener() {
+        mTvOrdinalNumber = (TextView) findViewById(R.id.tv_ordinal_number);
+        mTvOrdinalNumber.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mAdapter.selectCurrentItem();
             }
         });
 
-        mAdapter = new PreviewAdapter(this, mCheckbox, sharedElementCallback, selection);
+        mAdapter = new PreviewAdapter(this, mTvOrdinalNumber, sharedElementCallback, selection);
         mAdapter.setCallbacks(this);
         mAdapter.setMaxSelection(maxSelection);
 
@@ -215,7 +216,7 @@ public class PreviewActivity extends AppCompatActivity implements MediaLoader.Ca
 
     @Override
     public void onCheckedUpdated(boolean checked) {
-        mCheckbox.setChecked(checked);
+        mTvOrdinalNumber.setText("Checked");
     }
 
     @Override
@@ -266,7 +267,7 @@ public class PreviewActivity extends AppCompatActivity implements MediaLoader.Ca
         Uri uri = mAdapter.getData(position);
         if (uri != null) {
             String checkboxTransitionName = getString(R.string.activity_gallery_checkbox_transition, uri.toString());
-            ViewCompat.setTransitionName(mCheckbox, checkboxTransitionName);
+            ViewCompat.setTransitionName(mTvOrdinalNumber, checkboxTransitionName);
         }
     }
 

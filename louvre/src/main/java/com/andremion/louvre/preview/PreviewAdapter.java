@@ -32,6 +32,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckedTextView;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.andremion.louvre.R;
 import com.andremion.louvre.util.transition.MediaSharedElementCallback;
@@ -59,7 +60,7 @@ class PreviewAdapter extends PagerAdapter {
 
     private final FragmentActivity mActivity;
     private final LayoutInflater mInflater;
-    private final CheckedTextView mCheckbox;
+    private final TextView mTvOrdinalNumber;
     private final MediaSharedElementCallback mSharedElementCallback;
     private final List<Uri> mSelection;
     @Nullable
@@ -71,10 +72,10 @@ class PreviewAdapter extends PagerAdapter {
     private boolean mDontAnimate;
     private int mCurrentPosition = RecyclerView.NO_POSITION;
 
-    PreviewAdapter(@NonNull FragmentActivity activity, @NonNull CheckedTextView checkbox, @NonNull MediaSharedElementCallback sharedElementCallback, @NonNull List<Uri> selection) {
+    PreviewAdapter(@NonNull FragmentActivity activity, @NonNull TextView checkbox, @NonNull MediaSharedElementCallback sharedElementCallback, @NonNull List<Uri> selection) {
         mActivity = activity;
         mInflater = LayoutInflater.from(activity);
-        mCheckbox = checkbox;
+        mTvOrdinalNumber = checkbox;
         mSharedElementCallback = sharedElementCallback;
         mSelection = selection;
         mDontAnimate = true;
@@ -170,7 +171,7 @@ class PreviewAdapter extends PagerAdapter {
     public void setPrimaryItem(ViewGroup container, int position, Object object) {
         if (object instanceof ViewHolder) {
             mCurrentPosition = position;
-            mSharedElementCallback.setSharedElementViews(((ViewHolder) object).imageView, mCheckbox);
+            mSharedElementCallback.setSharedElementViews(((ViewHolder) object).imageView, mTvOrdinalNumber);
             if (mCallbacks != null) {
                 mCallbacks.onCheckedUpdated(isSelected(position));
             }

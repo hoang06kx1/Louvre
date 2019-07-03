@@ -233,7 +233,7 @@ public class GalleryFragment extends Fragment implements MediaLoader.Callbacks, 
                 RecyclerView.ViewHolder holder = mRecyclerView.findViewHolderForAdapterPosition(position);
                 if (holder instanceof GalleryAdapter.MediaViewHolder) {
                     GalleryAdapter.MediaViewHolder mediaViewHolder = (GalleryAdapter.MediaViewHolder) holder;
-                    sharedElementCallback.setSharedElementViews(mediaViewHolder.mImageView, mediaViewHolder.mCheckView);
+                    sharedElementCallback.setSharedElementViews(mediaViewHolder.mImageView, mediaViewHolder.mTvOrdinalNumber);
                 }
 
                 getActivity().supportStartPostponedEnterTransition();
