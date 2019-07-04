@@ -30,11 +30,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckedTextView;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.andremion.louvre.R;
+import com.andremion.louvre.ui.CheckView;
 import com.andremion.louvre.util.transition.MediaSharedElementCallback;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
@@ -53,14 +52,14 @@ class PreviewAdapter extends PagerAdapter {
 
     interface Callbacks {
 
-        void onCheckedUpdated(boolean checked);
+        void onCheckedUpdated(Integer positionChecked);
 
         void onMaxSelectionReached();
     }
 
     private final FragmentActivity mActivity;
     private final LayoutInflater mInflater;
-    private final TextView mTvOrdinalNumber;
+    private final CheckView mTvOrdinalNumber;
     private final MediaSharedElementCallback mSharedElementCallback;
     private final List<Uri> mSelection;
     @Nullable
@@ -72,7 +71,7 @@ class PreviewAdapter extends PagerAdapter {
     private boolean mDontAnimate;
     private int mCurrentPosition = RecyclerView.NO_POSITION;
 
-    PreviewAdapter(@NonNull FragmentActivity activity, @NonNull TextView checkbox, @NonNull MediaSharedElementCallback sharedElementCallback, @NonNull List<Uri> selection) {
+    PreviewAdapter(@NonNull FragmentActivity activity, @NonNull CheckView checkbox, @NonNull MediaSharedElementCallback sharedElementCallback, @NonNull List<Uri> selection) {
         mActivity = activity;
         mInflater = LayoutInflater.from(activity);
         mTvOrdinalNumber = checkbox;
@@ -161,6 +160,11 @@ class PreviewAdapter extends PagerAdapter {
         return mSelection.contains(data);
     }
 
+    private Integer getPositionSelected(int position) {
+        Uri data = getData(position);
+        return mSelection.indexOf(data) + 1;
+    }
+
     private void startPostponedEnterTransition(int position) {
         if (position == mInitialPosition) {
             mActivity.supportStartPostponedEnterTransition();
@@ -173,7 +177,7 @@ class PreviewAdapter extends PagerAdapter {
             mCurrentPosition = position;
             mSharedElementCallback.setSharedElementViews(((ViewHolder) object).imageView, mTvOrdinalNumber);
             if (mCallbacks != null) {
-                mCallbacks.onCheckedUpdated(isSelected(position));
+                mCallbacks.onCheckedUpdated(getPositionSelected(position));
             }
         }
     }
@@ -197,7 +201,7 @@ class PreviewAdapter extends PagerAdapter {
         }
         if (mCallbacks != null) {
             if (selectionChanged) {
-                mCallbacks.onCheckedUpdated(isSelected(mCurrentPosition));
+                mCallbacks.onCheckedUpdated(getPositionSelected(mCurrentPosition));
             } else {
                 mCallbacks.onMaxSelectionReached();
             }

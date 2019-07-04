@@ -38,11 +38,10 @@ import android.transition.Transition;
 import android.transition.TransitionInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.CheckedTextView;
-import android.widget.TextView;
 
 import com.andremion.louvre.R;
 import com.andremion.louvre.data.MediaLoader;
+import com.andremion.louvre.ui.CheckView;
 import com.andremion.louvre.util.transition.MediaSharedElementCallback;
 import com.andremion.louvre.util.transition.TransitionCallback;
 
@@ -119,7 +118,7 @@ public class PreviewActivity extends AppCompatActivity implements MediaLoader.Ca
     private MediaLoader mMediaLoader;
     private PreviewAdapter mAdapter;
     private ViewPager mViewPager;
-    private TextView mTvOrdinalNumber;
+    private CheckView mTvOrdinalNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,7 +144,8 @@ public class PreviewActivity extends AppCompatActivity implements MediaLoader.Ca
         assert selection != null;
         int maxSelection = getIntent().getExtras().getInt(EXTRA_MAX_SELECTION);
 
-        mTvOrdinalNumber = (TextView) findViewById(R.id.tv_ordinal_number);
+        mTvOrdinalNumber = (CheckView) findViewById(R.id.tv_ordinal_number);
+        mTvOrdinalNumber.setCountable(true);
         mTvOrdinalNumber.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -215,8 +215,14 @@ public class PreviewActivity extends AppCompatActivity implements MediaLoader.Ca
     }
 
     @Override
-    public void onCheckedUpdated(boolean checked) {
-        mTvOrdinalNumber.setText("Checked");
+    public void onCheckedUpdated(Integer positionSelected) {
+        if (positionSelected > 0) {
+            mTvOrdinalNumber.setCountable(true);
+            mTvOrdinalNumber.setCheckedNum(positionSelected);
+        } else {
+            mTvOrdinalNumber.setCountable(false);
+            mTvOrdinalNumber.setChecked(false);
+        }
     }
 
     @Override

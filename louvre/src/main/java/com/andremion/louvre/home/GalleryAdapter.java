@@ -33,6 +33,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.andremion.louvre.R;
+import com.andremion.louvre.ui.CheckView;
 import com.andremion.louvre.util.AnimationHelper;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -175,7 +176,13 @@ class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHolder> {
         if (VIEW_TYPE_MEDIA == getItemViewType(position)) {
             MediaViewHolder viewHolder = (MediaViewHolder) holder;
             ViewCompat.setTransitionName(viewHolder.mTvOrdinalNumber, checkboxTransitionName);
-            viewHolder.mTvOrdinalNumber.setText(selected ? "+" : "-");
+            if (selected) {
+                viewHolder.mTvOrdinalNumber.setCountable(true);
+                viewHolder.mTvOrdinalNumber.setCheckedNum(getPositionSelected(position));
+            } else {
+                viewHolder.mTvOrdinalNumber.setCountable(false);
+                viewHolder.mTvOrdinalNumber.setChecked(false);
+            }
             holder.mImageView.setContentDescription(getLabel(position));
         } else {
             BucketViewHolder viewHolder = (BucketViewHolder) holder;
@@ -196,7 +203,13 @@ class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHolder> {
                 if (SELECTION_PAYLOAD.equals(payload)) {
                     if (VIEW_TYPE_MEDIA == getItemViewType(position)) {
                         MediaViewHolder viewHolder = (MediaViewHolder) holder;
-                        viewHolder.mTvOrdinalNumber.setText(selected? "+": "-");
+                        if (selected) {
+                            viewHolder.mTvOrdinalNumber.setCountable(true);
+                            viewHolder.mTvOrdinalNumber.setCheckedNum(getPositionSelected(position));
+                        } else {
+                            viewHolder.mTvOrdinalNumber.setCountable(false);
+                            viewHolder.mTvOrdinalNumber.setChecked(false);
+                        }
                         if (selected) {
                             AnimationHelper.scaleView(holder.mImageView, SELECTED_SCALE);
                         } else {
@@ -267,6 +280,11 @@ class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHolder> {
         return mSelection.contains(data);
     }
 
+    private Integer getPositionSelected(int position) {
+        Uri data = getData(position);
+        return mSelection.indexOf(data) + 1;
+    }
+
     private String getLabel(int position) {
         assert mData != null; // It is supposed not be null here
         mData.moveToPosition(position);
@@ -328,11 +346,12 @@ class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHolder> {
 
     class MediaViewHolder extends ViewHolder implements View.OnClickListener {
 
-        final TextView mTvOrdinalNumber;
+        final CheckView mTvOrdinalNumber;
 
         private MediaViewHolder(View itemView) {
             super(itemView);
             mTvOrdinalNumber = itemView.findViewById(R.id.tv_ordinal_number);
+            mTvOrdinalNumber.setCountable(true);
             mTvOrdinalNumber.setOnClickListener(this);
             itemView.setOnClickListener(this);
         }
@@ -350,7 +369,8 @@ class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHolder> {
             if (v == mTvOrdinalNumber) {
                 boolean selectionChanged = handleChangeSelection(position);
                 if (selectionChanged) {
-                    notifyItemChanged(position, SELECTION_PAYLOAD);
+                    notifySelectionChanged();
+//                    notifyItemChanged(position, SELECTION_PAYLOAD);
                 }
                 if (mCallbacks != null) {
                     if (selectionChanged) {
